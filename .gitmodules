@@ -1,0 +1,3 @@
+[submodule "dependencies/PTaH"]
+	path = dependencies/PTaH
+	url = https://github.com/komashchenko/PTaH
