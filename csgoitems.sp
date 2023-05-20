@@ -2,6 +2,8 @@
 #include <sdktools>
 #include <PTaH>
 
+#include "items.sp"
+
 #pragma semicolon 1
 #pragma newdecls required
 
@@ -65,7 +67,7 @@ Action GiveNamedItemPre(int client, char classname[64], CEconItemView &item, boo
     if(StrContains(classname, "knife") > -1 || StrContains(classname, "bayonet") > -1)
     {
         ignoredCEconItemView = true;
-        strcopy(classname, sizeof(classname), "weapon_knife_karambit");
+        strcopy(classname, sizeof(classname), "weapon_bayonet");
         return Plugin_Changed;
     }
     return Plugin_Continue;
@@ -75,15 +77,19 @@ void GiveNamedItemPost(int client, const char[] classname, const CEconItemView i
 {
     if(IsValidEntity(entity))
     {
-        if(StrContains(classname, "knife") > -1 || StrContains(classname, "bayonet") > -1)
+        int weapon_id = GetEntProp(entity, Prop_Send, "m_iItemDefinitionIndex");
+        if (GetWeaponIndexFromWeaponId(weapon_id) == -1)
         {
-            SetEntProp(entity, Prop_Send, "m_nFallbackPaintKit", 572);
-            SetEntProp(entity, Prop_Send, "m_iItemIDHigh", -1);
+            return;
+        }
+        int random_skin = GetRandomSkinFromWeaponId(weapon_id);
+        PrintToConsole(client, "SkinId: %i", random_skin);
+        SetEntProp(entity, Prop_Send, "m_nFallbackPaintKit", random_skin);
+        SetEntProp(entity, Prop_Send, "m_iItemIDHigh", -1);
+        SetEntProp(entity, Prop_Send, "m_iItemIDLow", -1);
+        if(StrContains(classname, "knife") != -1 || StrContains(classname, "bayonet") != -1)
+        {
             SetEntProp(entity, Prop_Send, "m_iEntityQuality", 3);
-            SetEntProp(entity, Prop_Send, "m_iAccountID", GetSteamAccountID(client));
-            SetEntProp(entity, Prop_Send, "m_iItemIDLow", -1);
-            SetEntProp(entity, Prop_Send, "m_hOwnerEntity", client);
-            SetEntProp(entity, Prop_Send, "m_hPrevOwner", -1);
         }
     }
 }
