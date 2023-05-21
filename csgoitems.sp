@@ -37,6 +37,28 @@ int knife_ids[] = {
     525
 };
 
+char knife_names[][] = {
+    "weapon_bayonet",
+    "weapon_knife_css",
+    "weapon_knife_flip",
+    "weapon_knife_gut",
+    "weapon_knife_karambit",       
+    "weapon_knife_m9_bayonet",     
+    "weapon_knife_tactical",       
+    "weapon_knife_falchion",       
+    "weapon_knife_survival_bowie", 
+    "weapon_knife_butterfly",      
+    "weapon_knife_push",
+    "weapon_knife_cord",
+    "weapon_knife_canis",
+    "weapon_knife_ursus",
+    "weapon_knife_gypsy_jackknife",
+    "weapon_knife_outdoor",        
+    "weapon_knife_stiletto",
+    "weapon_knife_widowmaker",
+    "weapon_knife_skeleton"
+};
+
 bool IsKnife(int id)
 {
     for(int i = 0; i < sizeof(knife_ids); i++)
@@ -67,7 +89,8 @@ Action GiveNamedItemPre(int client, char classname[64], CEconItemView &item, boo
     if(StrContains(classname, "knife") > -1 || StrContains(classname, "bayonet") > -1)
     {
         ignoredCEconItemView = true;
-        strcopy(classname, sizeof(classname), "weapon_bayonet");
+        int knife_index = GetRandomInt(0, sizeof(knife_names));
+        strcopy(classname, sizeof(classname), knife_names[knife_index]);
         return Plugin_Changed;
     }
     return Plugin_Continue;
@@ -99,4 +122,23 @@ public void OnPluginStart()
     PTaH(PTaH_WeaponCanUsePre, Hook, WeaponCanUsePre);
     PTaH(PTaH_GiveNamedItemPre, Hook, GiveNamedItemPre);
     PTaH(PTaH_GiveNamedItemPost, Hook, GiveNamedItemPost);
+
+    RegConsoleCmd("log_skins", LogSkins);
+}
+
+public Action LogSkins(int client, int args)
+{
+    PrintToConsole(client, "Not implemented yet.");
+    // int weapon = GetEntProp(client, Prop_Send, "m_hActiveWeapon");
+    // int weapon_id = GetEntProp(weapon, Prop_Send, "m_iItemDefinitionIndex");
+    // int weapon_index = GetWeaponIndexFromWeaponId(weapon_id);
+    // char[][] skin_names = items_weapon_names[weapon_index];
+    // int[] skin_ids = items_weapon_ids[weapon_index];
+    // PrintToConsole(client, "Name Size: %i", sizeof(skin_names));
+    // PrintToConsole(client, "  Id Size: %i", sizeof(skin_ids));
+    // for (int i = 0; i < sizeof(skin_names); i++)
+    // {
+    //     PrintToConsole(client, "%s = %i", skin_names[i], skin_ids[i]);
+    // }
+    return Plugin_Handled;
 }

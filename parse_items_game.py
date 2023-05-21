@@ -109,6 +109,24 @@ for weapon, skins in skins5.items():
     if weapon != list(skins5.keys())[-1]:
         f.write(",\n")
     else:
+        f.write("\n};\n")
+
+f.write("char items_weapon_names[][][] = {\n")
+for weapon, skins in skins3.items():
+    f.write("    { ")
+    for skin in skins:
+        f.write(f"\"{skin}\"")
+
+        # if not last skin write a comma
+        if skin != skins[-1]:
+            f.write(", ")
+        else:
+            f.write(" }")
+    
+    # if not last weapon write a comma
+    if weapon != list(skins3.keys())[-1]:
+        f.write(",\n")
+    else:
         f.write("\n};\n\n")
 
 f.write("int GetWeaponIndexFromWeaponId(int weapon_id)\n")
@@ -137,3 +155,9 @@ f.write("    int skin_count = items_weapon_skin_count[weapon_index];\n")
 f.write("    int skin_index = GetRandomInt(0, skin_count - 1);\n")
 f.write("    return items_weapon_skin_ids[weapon_index][skin_index];\n")
 f.write("}\n")
+
+
+for id, info in ig.get("items_game").get("items").items():
+    if id.isdigit() and info.get("name"):
+        if info.get("prefab") == "melee_unusual":
+            print(info.get("name"))
